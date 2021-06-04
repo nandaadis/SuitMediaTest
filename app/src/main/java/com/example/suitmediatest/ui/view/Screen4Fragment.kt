@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,6 +20,7 @@ import com.example.suitmediatest.ui.adapter.EventAdapter
 import com.example.suitmediatest.ui.adapter.GuestAdapter
 import com.example.suitmediatest.ui.viewmodel.Screen4ViewModel
 import kotlinx.android.synthetic.main.fragment_screen4.*
+import android.widget.Toast.LENGTH_SHORT
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,6 +41,9 @@ class Screen4Fragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: Screen4ViewModel
+
+    var current_page: Int = 1
+    var total_page: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,12 +72,43 @@ class Screen4Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        current_page = 1
+        total_page = 0
+
+        getData(current_page)
+
+        binding.btnPageNext.setOnClickListener {
+            if(current_page < total_page) {
+                current_page = current_page + 1
+                getData(current_page)
+            } else (
+                    Toast.makeText(
+                        activity,
+                        "ini adalah halaman terakhir",
+                        Toast.LENGTH_SHORT
+                    ).show()
+            )
+        }
+
+        binding.btnPagePrev.setOnClickListener {
+            if(current_page > 1) {
+                current_page = current_page - 1
+                getData(current_page)
+            } else (
+                    Toast.makeText(
+                        activity,
+                        "ini adalah halaman pertama",
+                                Toast.LENGTH_SHORT
+                    ).show()
+                    )
+        }
+
+    }
+
+    fun getData( page: Int) {
         binding.progressbar.visibility = View.VISIBLE
-
-        var current_page = 1
-
-        viewModel.getGuest(current_page)!!.observe(viewLifecycleOwner, Observer {
-          binding.progressbar.visibility = View.INVISIBLE
+        viewModel.getGuest(page)!!.observe(viewLifecycleOwner, Observer {
+            binding.progressbar.visibility = View.INVISIBLE
 
             binding.rvGuest.layoutManager = GridLayoutManager(context,2)
 
@@ -80,10 +116,12 @@ class Screen4Fragment : Fragment() {
 
             binding.rvGuest.adapter = adapter
 
-          binding.tvPage.setText(it.page.toString())
+            binding.tvPage.setText(it.page.toString())
+
+            current_page = it.page
+            total_page = it.total_pages
 
         })
-
     }
 
 
