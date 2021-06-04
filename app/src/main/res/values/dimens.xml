@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    //Font
+    <dimen name="big">24sp</dimen>
+    <dimen name="normal">14sp</dimen>
+    <dimen name="small">12sp</dimen>
+    <dimen name="action_bar">24sp</dimen>
+    <dimen name="header">18sp</dimen>
+
+    //Other
+    <dimen name="btn_height">48dp</dimen>
+    <dimen name="et_height">48dp</dimen>
+    <dimen name="action_bar_height">64dp</dimen>
+
+</resources>
