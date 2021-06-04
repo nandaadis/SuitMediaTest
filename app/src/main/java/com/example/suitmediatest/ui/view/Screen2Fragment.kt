@@ -10,6 +10,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.example.suitmediatest.R
 import com.example.suitmediatest.databinding.FragmentScreen1Binding
 import com.example.suitmediatest.databinding.FragmentScreen2Binding
@@ -65,19 +66,27 @@ class Screen2Fragment : Fragment() {
             binding.btnEvent.setText(result)
         }
 
-        binding.btnEvent.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.action_screen2Fragment_to_screen3Fragment)
-        }
-
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("key_guest")?.observe(viewLifecycleOwner) {result ->
             binding.btnGuest.setText(result)
+        }
+
+        binding.btnEvent.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_screen2Fragment_to_screen3Fragment)
         }
 
         binding.btnGuest.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_screen2Fragment_to_screen4Fragment)
         }
 
+        Glide
+            .with(this)
+            .load(R.drawable.bg_bright)
+            .into(binding.view)
 
+        Glide
+            .with(this)
+            .load(R.drawable.img_suitmedia)
+            .into(binding.view2)
 
     }
 

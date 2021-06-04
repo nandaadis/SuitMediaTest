@@ -1,5 +1,6 @@
 package com.example.suitmediatest.ui.view
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.navigation.NavArgument
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.suitmediatest.R
 import com.example.suitmediatest.data.dummy.dummy_event
 import com.example.suitmediatest.databinding.FragmentScreen1Binding
@@ -59,12 +61,23 @@ class Screen1Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Glide
+            .with(this)
+            .load(R.drawable.bg_bright)
+            .into(binding.view3)
+
+        Glide
+            .with(this)
+            .load(R.drawable.img_avatar)
+            .circleCrop()
+            .into(binding.ivPhoto)
+
         binding.btnNext.setOnClickListener {
             var name = binding.etName.text.toString()
             if (name == ""){
                 Toast.makeText(
                     activity,
-                    "nama harus diisi",
+                    "name cannot be empty ",
                     LENGTH_SHORT
                 ).show()
             } else {
@@ -73,6 +86,40 @@ class Screen1Fragment : Fragment() {
             }
         }
 
+        binding.btnPalindrome.setOnClickListener {
+            val check = binding.etPalindrome.text.toString()
+            if (check == ""){
+                Toast.makeText(
+                    activity,
+                    "not palindrome",
+                    LENGTH_SHORT
+                ).show()
+            } else if (checkPalindrome(check)) {
+                Toast.makeText(
+                    activity,
+                    "is palindrome",
+                    LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    activity,
+                    "not palindrome",
+                    LENGTH_SHORT
+                ).show()
+            }
+        }
+
+
+    }
+
+    fun checkPalindrome(s: String): Boolean {
+        var cleanString = s.toLowerCase().replace("[^a-z0-9]".toRegex(),"")
+
+        if (cleanString == cleanString.reversed()){
+            return true
+        }
+
+        return false
     }
 
     companion object {
