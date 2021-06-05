@@ -21,6 +21,9 @@ import com.example.suitmediatest.ui.adapter.GuestAdapter
 import com.example.suitmediatest.ui.viewmodel.Screen4ViewModel
 import kotlinx.android.synthetic.main.fragment_screen4.*
 import android.widget.Toast.LENGTH_SHORT
+import androidx.recyclerview.widget.RecyclerView
+import com.example.suitmediatest.data.model.Data
+import okhttp3.internal.immutableListOf
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,8 +45,13 @@ class Screen4Fragment : Fragment() {
 
     private lateinit var viewModel: Screen4ViewModel
 
-    var current_page: Int = 1
-    var total_page: Int = 0
+    lateinit var adapter : RecyclerView.Adapter<GuestAdapter.ViewHolder>
+
+    var showItem: MutableList<Data> = mutableListOf()
+
+    var isLoading = true
+
+    var totalpage = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,54 +80,73 @@ class Screen4Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        current_page = 1
-        total_page = 0
-
-        getData(current_page)
-
-        binding.btnPageNext.setOnClickListener {
-            if(current_page < total_page) {
-                current_page = current_page + 1
-                getData(current_page)
-            } else (
-                    Toast.makeText(
-                        activity,
-                        "ini adalah halaman terakhir",
-                        Toast.LENGTH_SHORT
-                    ).show()
-            )
+        binding.btnBack.setOnClickListener {
+            activity?.onBackPressed()
         }
 
-        binding.btnPagePrev.setOnClickListener {
-            if(current_page > 1) {
-                current_page = current_page - 1
-                getData(current_page)
-            } else (
-                    Toast.makeText(
-                        activity,
-                        "ini adalah halaman pertama",
-                                Toast.LENGTH_SHORT
-                    ).show()
-                    )
+        var page = 1
+
+        adapter = GuestAdapter(showItem, activity!!, this)
+        binding.rvGuest.adapter = adapter
+
+        getData(page)
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            myUpdateOperation()
+            page = 1
         }
 
+        val layoutManager = GridLayoutManager(context,2)
+        binding.rvGuest.layoutManager = layoutManager
+
+        binding.rvGuest.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+
+                val visibleItemCount = recyclerView.childCount
+                val pastVisibleItem = layoutManager.findFirstCompletelyVisibleItemPosition()
+                val total = adapter.itemCount
+
+//                Log.d(
+//                    "error",
+//                    "visibleitemcount = $visibleItemCount, pastvisible = $pastVisibleItem, total = $total"
+//                )
+
+                if(!isLoading) {
+                    if ((visibleItemCount+pastVisibleItem) >= total && page < totalpage){
+                        isLoading = true
+                        page++
+                        getData(page)
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy)
+            }
+        })
     }
 
+    fun myUpdateOperation() {
+        showItem = mutableListOf()
+        getData(1)
+        binding.swipeRefreshLayout.setRefreshing(false)
+    }
+
+
     fun getData( page: Int) {
+
+        Log.d("error", page.toString())
+        isLoading = true
         binding.progressbar.visibility = View.VISIBLE
         viewModel.getGuest(page)!!.observe(viewLifecycleOwner, Observer {
+            val initialSize = showItem.size
+            totalpage = it.total_pages
+            for (i in it.data) {
+                showItem.add(i)
+            }
+            val updateSize = showItem.size
+
+            //adapter.notifyItemRangeInserted(initialSize,updateSize)
+            adapter.notifyDataSetChanged()
+            isLoading = false
             binding.progressbar.visibility = View.INVISIBLE
-
-            binding.rvGuest.layoutManager = GridLayoutManager(context,2)
-
-            val adapter = GuestAdapter(it.data, activity!!, this)
-
-            binding.rvGuest.adapter = adapter
-
-            binding.tvPage.setText(it.page.toString())
-
-            current_page = it.page
-            total_page = it.total_pages
 
         })
     }

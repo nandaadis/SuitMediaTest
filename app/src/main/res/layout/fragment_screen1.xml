@@ -86,7 +86,8 @@
         android:paddingStart="28dp"
         android:maxLength="12"
         app:layout_constraintStart_toStartOf="@+id/view2"
-        app:layout_constraintTop_toBottomOf="@+id/iv_photo" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_photo"
+        />
 
     <EditText
         android:id="@+id/et_palindrome"

@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -58,11 +60,16 @@ class Screen3Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-    binding.btnBack.setOnClickListener {
-        activity?.onBackPressed()
-    }
+        binding.btnBack.setOnClickListener {
+            activity?.onBackPressed()
+        }
 
-        binding.rvEvent.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.btnMap.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_screen3Fragment_to_mapsFragment)
+        }
+
+        binding.rvEvent.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         val adapter = EventAdapter(dummy_event.dataEvent, activity!!, this)
 

@@ -11,11 +11,11 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="148dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="6dp"
+        android:layout_width="340dp"
+        android:layout_height="138dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/bg_round_white"
         android:clickable="true"
         android:elevation="10dp"
@@ -35,6 +35,9 @@
         app:layout_constraintBottom_toBottomOf="@id/view"
         app:layout_constraintStart_toStartOf="@id/view"
         android:elevation="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         />
 
     <TextView
@@ -47,6 +50,7 @@
         app:layout_constraintTop_toTopOf="@id/view"
         app:layout_constraintStart_toEndOf="@id/iv_photo"
         android:text="dummy_text"
+        android:textStyle="bold"
         android:textColor="@color/black"
         android:elevation="10dp"
         android:textSize="@dimen/normal"
@@ -61,7 +65,7 @@
         app:layout_constraintBottom_toBottomOf="@id/view"
         app:layout_constraintEnd_toEndOf="@id/view"
         android:text="dummy_text"
-        android:textColor="@color/gray_light"
+        android:textColor="@color/gray"
         android:elevation="10dp"
         android:textSize="@dimen/small"
         />

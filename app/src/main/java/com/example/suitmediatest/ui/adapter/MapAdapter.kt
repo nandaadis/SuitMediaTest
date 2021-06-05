@@ -1,26 +1,30 @@
 package com.example.suitmediatest.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.navigation.fragment.NavHostFragment.findNavController
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.suitmediatest.R
+import com.example.suitmediatest.data.model.Data
 import com.example.suitmediatest.data.model.EventModel
-import com.example.suitmediatest.data.model.GuestModel
 import com.example.suitmediatest.databinding.ItemEventBinding
 import com.example.suitmediatest.databinding.ItemGuestBinding
+import com.google.android.gms.common.api.GoogleApi
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
-import kotlinx.android.synthetic.main.item_event.*
 
-class EventAdapter(val listItem: MutableList<EventModel>, val activity: FragmentActivity, val view: Fragment) :
-    RecyclerView.Adapter<EventAdapter.ViewHolder>() {
+class MapAdapter(val listItem: MutableList<EventModel>, val activity: FragmentActivity, val view: Fragment, val GMap : GoogleMap) :
+    RecyclerView.Adapter<MapAdapter.ViewHolder>() {
     class ViewHolder(val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -47,11 +51,14 @@ class EventAdapter(val listItem: MutableList<EventModel>, val activity: Fragment
         holder.binding.tvDate.setText(listItem[position].date)
 
         holder.binding.view.setOnClickListener {
-            findNavController(view).previousBackStackEntry?.savedStateHandle?.set(
-                "key_event",
-                listItem[position].name
-            )
-            activity?.onBackPressed()
+            GMap.setOnMarkerClickListener { marker ->
+                marker.setIcon(
+                    BitmapDescriptorFactory.fromResource(
+                    R.drawable.ic_marker_selected))
+                true
+            }
+
+            GMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(listItem[position].lat, listItem[position].long)))
         }
 
     }
@@ -59,6 +66,7 @@ class EventAdapter(val listItem: MutableList<EventModel>, val activity: Fragment
     override fun getItemCount(): Int {
         return listItem.size
     }
+
 
 
 }

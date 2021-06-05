@@ -4,7 +4,7 @@
     <dimen name="big">24sp</dimen>
     <dimen name="normal">14sp</dimen>
     <dimen name="small">12sp</dimen>
-    <dimen name="action_bar">24sp</dimen>
+    <dimen name="action_bar">18sp</dimen>
     <dimen name="header">18sp</dimen>
 
     //Other
